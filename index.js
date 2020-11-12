@@ -36,7 +36,8 @@ function start() {
                     "View departments",
                     "View roles",
                     "View employees",
-                    "Update employee roles"
+                    "Update employee roles",
+                    "I'M DONE"
                 ]
             }
         ])
@@ -83,10 +84,118 @@ function addDepartments() {
                 },
                 function (err) {
                     if (err) throw err;
-                    console.log("Your auction was created successfully!");
+                    console.log("The department was added successfully!");
                     start();
                 }
             );
 
         });
-}
+};
+
+function addRoles() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "roleTitle",
+            message: "What is the role title you would like to add?"
+        },
+        {
+            type: "input",
+            name: "roleSalary",
+            message: "What is the salary of the role you would like to add?"
+        },
+        {
+            type: "input",
+            name: "roleDeptID",
+            message: "What is the department ID of the role you would like to add?"
+        }
+    ])
+        .then(function (answer) {
+            connection.query(
+                "INSERT INTO role SET ?",
+                {
+                    title: answer.roleTitle,
+                    salary: answer.roleSalary,
+                    department_id: answer.roleDeptID
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("The role was added successfully!");
+                    start();
+                }
+            );
+
+        });
+};
+
+function addEmployees() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "employeeFirstName",
+            message: "What is the first name of the employee you would like to add?"
+        },
+        {
+            type: "input",
+            name: "employeeLastName",
+            message: "What is the last name of the employee you would like to add?"
+        },
+        {
+            type: "input",
+            name: "employeeRoleID",
+            message: "What is the role ID of the employee you would like to add?"
+        },
+        {
+            type: "input",
+            name: "employeeManagerID",
+            message: "What is the manager ID of the employee you would like to add?"
+        }
+    ])
+        .then(function (answer) {
+            connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                    first_name: answer.employeeFirstName,
+                    last_name: answer.employeeLastName,
+                    role_id: answer.employeeRoleID,
+                    manager_id: answer.employeeManagerID
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("The employee was added successfully!");
+                    start();
+                }
+            );
+
+        });
+};
+
+function viewDepartments() {
+    console.log("Viewing all departments...\n");
+    connection.query("SELECT * FROM department", function (err, res) {
+        if (err) throw err;
+        console.log(res);
+        connection.end();
+        start();
+    });
+};
+
+function viewRoles() {
+    console.log("Viewing all roles...\n");
+    connection.query("SELECT * FROM role", function (err, res) {
+        if (err) throw err;
+        console.log(res);
+        connection.end();
+        start();
+    });
+};
+
+function viewEmployees() {
+    console.log("Viewing all employees...\n");
+    connection.query("SELECT * FROM employee", function (err, res) {
+        if (err) throw err;
+        console.log(res);
+        connection.end();
+        start();
+    });
+};

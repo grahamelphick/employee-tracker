@@ -37,7 +37,7 @@ function start() {
                     "View roles",
                     "View employees",
                     "Update employee roles",
-                    "I'M DONE"
+                    "QUIT"
                 ]
             }
         ])
@@ -174,7 +174,7 @@ function viewDepartments() {
     console.log("Viewing all departments...\n");
     connection.query("SELECT * FROM department", function (err, res) {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
         connection.end();
         start();
     });
@@ -184,7 +184,7 @@ function viewRoles() {
     console.log("Viewing all roles...\n");
     connection.query("SELECT * FROM role", function (err, res) {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
         connection.end();
         start();
     });
@@ -194,8 +194,52 @@ function viewEmployees() {
     console.log("Viewing all employees...\n");
     connection.query("SELECT * FROM employee", function (err, res) {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
         connection.end();
         start();
     });
+};
+
+function updateEmployees() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "employeeID",
+            message: "What is the ID of the employee you would like to add?"
+        },
+        {
+            type: "list",
+            name: "employeeCat",
+            message: "What would you like to change?",
+            choices: [
+                "first_name",
+                "last_name",
+                "role_id",
+                "manager_id"
+            ]
+        },
+        {
+            type: "input",
+            name: "employeeUpdate",
+            message: "What is the updated information?"
+        }
+    ])
+        .then(function (answer) {
+            connection.query(
+                "UPDATE employee SET ? WHERE ?",
+                [
+                    {
+                        [answer.employeeCat]: answer.employeeUpdate
+                    },
+                    {
+                        id: answer.employeeID
+                    }
+                ],
+                function (err, res) {
+                    if (err) throw err;
+                    console.log(res.affectedRows + " products updated!\n");
+                    start();
+                }
+            );
+        });
 };

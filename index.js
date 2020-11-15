@@ -36,7 +36,8 @@ function start() {
                     "View departments",
                     "View roles",
                     "View employees",
-                    "Update employee roles",
+                    "Delete employee",
+                    "Update employee information",
                     "QUIT"
                 ]
             }
@@ -60,8 +61,10 @@ function start() {
             else if (answer.action === "View employees") {
                 viewEmployees();
             }
-            else if (answer.action === "Update employee roles") {
+            else if (answer.action === "Update employee information") {
                 updateEmployees();
+            } else if (answer.action === "Delete employee") {
+                deleteEmployee();
             } else {
                 connection.end();
             }
@@ -85,6 +88,7 @@ function addDepartments() {
                 function (err) {
                     if (err) throw err;
                     console.log("The department was added successfully!");
+                    viewDepartments();
                     start();
                 }
             );
@@ -121,6 +125,7 @@ function addRoles() {
                 function (err) {
                     if (err) throw err;
                     console.log("The role was added successfully!");
+                    viewRoles();
                     start();
                 }
             );
@@ -163,6 +168,7 @@ function addEmployees() {
                 function (err) {
                     if (err) throw err;
                     console.log("The employee was added successfully!");
+                    viewEmployees();
                     start();
                 }
             );
@@ -212,10 +218,10 @@ function updateEmployees() {
             name: "employeeCat",
             message: "What would you like to change?",
             choices: [
-                "first_name",
-                "last_name",
-                "role_id",
-                "manager_id"
+                "First name",
+                "Last name",
+                "Role ID",
+                "Manager ID"
             ]
         },
         {
@@ -225,11 +231,21 @@ function updateEmployees() {
         }
     ])
         .then(function (answer) {
+            let employeeCat = "";
+            if (answer.employeeCat === "First name") {
+                employeeCat = "first_name"
+            } else if (answer.employeeCat === "Last name") {
+                employeeCat = "last_name"
+            } else if (answer.employeeCat === "Role ID") {
+                employeeCat = "role_id"
+            } else if (answer.employeeCat === "Manager ID") {
+                employeeCat = "manager_id"
+            };
             connection.query(
                 "UPDATE employee SET ? WHERE ?",
                 [
                     {
-                        [answer.employeeCat]: answer.employeeUpdate
+                        [employeeCat]: answer.employeeUpdate
                     },
                     {
                         id: answer.employeeID
@@ -237,9 +253,33 @@ function updateEmployees() {
                 ],
                 function (err, res) {
                     if (err) throw err;
-                    console.log(res.affectedRows + " products updated!\n");
+                    console.log("Employee updated!\n");
+                    viewEmployees();
                     start();
                 }
             );
+        });
+};
+
+function deleteEmployee() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "employeeID",
+            message: "What is the ID of the employee you would like to delete?"
+        }
+    ])
+        .then(function (answer) {
+            connection.query(
+                "DELETE FROM employee WHERE ?",
+                {
+                    id: answer.employeeID
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    console.log("Employee deleted!\n");
+                    viewEmployees();
+                    start();
+                });
         });
 };

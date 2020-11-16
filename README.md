@@ -8,7 +8,7 @@ This application allows the user to add, view and update information about a com
 
 * [Github Profile](#github-profile)
 
-* [Demonstration Video](#demonstation-video)
+* [Demonstration Video](#demonstration-video)
 
 ## Installation
 npm install - inquirer, mysql, console.table

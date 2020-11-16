@@ -6,7 +6,9 @@ This application allows the user to add, view and update information about a com
 ## Table of Contents
 * [Installation](#installation)
 
-* [Github Profile](#demonstation-video)
+* [Github Profile](#github-profile)
+
+* [Demonstration Video](#demonstation-video)
 
 ## Installation
 npm install - inquirer, mysql, console.table
